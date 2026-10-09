@@ -70,6 +70,11 @@ function matches(binding, event) {
     return true;
 }
 
+//unmodified arrow keys are what leanback itself uses to navigate menus and the player controls
+function isPlainArrow(binding) {
+    return !!binding && binding.key.startsWith('arrow') && !binding.ctrl && !binding.alt && !binding.shift && !binding.meta;
+}
+
 //combines default bindings with user overrides into { action: [parsed bindings] }
 //an override can be a string, an array of strings, or ""/[] to unbind the action entirely
 function resolveBindings(defaults, overrides) {
@@ -93,5 +98,6 @@ function resolveBindings(defaults, overrides) {
 module.exports = {
     parse,
     matches,
+    isPlainArrow,
     resolveBindings
 }

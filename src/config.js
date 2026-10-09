@@ -47,6 +47,7 @@ const defaults = {
     touch_overlay: true, //whether or not to enable the touch overlay interface when touch is detected
     controller_support: true, //whether or not to enable game controller support
     device_discoverability: true, //whether or not to enable DIAL support
+    menu_guard: true, //only let unmodified arrow key shortcuts act when the video has focus (no menu open, no player control selected), so they don't break menu navigation
     keybinds: {} //overrides for playback shortcuts, action -> key or array of keys ("ctrl+shift+c" style), "" to unbind. actions: volumeUp, volumeDown, mute, speedUp, speedDown, speedReset, toggleCaptions, playPause, seekBackward, seekForward, toggleFullscreen
 }
 

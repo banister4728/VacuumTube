@@ -37,6 +37,16 @@ function isWatching() {
     }
 }
 
+//true when the video itself has focus, meaning no menu is open and no player control is selected
+//leanback marks focused elements (and their ancestors) with zylon-focus, so the deepest ones tell us where focus actually is
+//if we can't tell, this returns false so that leanback keeps its own arrow key navigation
+function isPlayerIdle() {
+    let focused = [ ...document.querySelectorAll('.zylon-focus') ].filter((el) => !el.querySelector('.zylon-focus'))
+    if (focused.length === 0) return false;
+
+    return focused.every((el) => el.matches('ytlr-shorts-page') || !!el.querySelector('video'))
+}
+
 function getBindings() {
     let overrides = configManager.get().keybinds
     if (cache.bindings && cache.overrides === overrides) return cache.bindings; //config object is replaced on update, so identity check is enough
@@ -53,7 +63,11 @@ function onKeyDown(e) {
 
     let bindings = getBindings()
     for (let [ name, handler ] of Object.entries(actions)) {
-        if (!bindings[name]?.some((binding) => keyCombo.matches(binding, e))) continue;
+        let binding = bindings[name]?.find((b) => keyCombo.matches(b, e))
+        if (!binding) continue;
+
+        //arrow keys step aside while a menu or the player controls are being navigated (can be disabled with menu_guard: false in config.json)
+        if (keyCombo.isPlainArrow(binding) && configManager.get().menu_guard !== false && !isPlayerIdle()) continue;
 
         e.preventDefault()
         e.stopPropagation()

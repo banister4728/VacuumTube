@@ -42,3 +42,11 @@ test('resolves bindings with overrides', () => {
     assert.ok(!('bogus' in resolved))
     assert.strictEqual(keyCombo.resolveBindings(defaults, undefined).mute[0].key, 'm')
 })
+
+test('identifies unmodified arrow bindings', () => {
+    assert.ok(keyCombo.isPlainArrow(keyCombo.parse('arrowup')))
+    assert.ok(keyCombo.isPlainArrow(keyCombo.parse('left')))
+    assert.ok(!keyCombo.isPlainArrow(keyCombo.parse('ctrl+arrowup')))
+    assert.ok(!keyCombo.isPlainArrow(keyCombo.parse('m')))
+    assert.ok(!keyCombo.isPlainArrow(null))
+})
