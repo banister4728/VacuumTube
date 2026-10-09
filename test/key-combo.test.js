@@ -50,3 +50,30 @@ test('identifies unmodified arrow bindings', () => {
     assert.ok(!keyCombo.isPlainArrow(keyCombo.parse('m')))
     assert.ok(!keyCombo.isPlainArrow(null))
 })
+
+test('builds combo strings from events', () => {
+    assert.strictEqual(keyCombo.fromEvent(ev('m')), 'm')
+    assert.strictEqual(keyCombo.fromEvent(ev('M', { shiftKey: true })), 'shift+m')
+    assert.strictEqual(keyCombo.fromEvent(ev('C', { ctrlKey: true, shiftKey: true })), 'ctrl+shift+c')
+    assert.strictEqual(keyCombo.fromEvent(ev(' ')), 'space')
+    assert.strictEqual(keyCombo.fromEvent(ev('ArrowUp')), 'arrowup')
+    assert.strictEqual(keyCombo.fromEvent(ev('+', { shiftKey: true })), '+') //shift implied for symbols
+    assert.strictEqual(keyCombo.fromEvent(ev('Shift', { shiftKey: true })), null)
+    assert.strictEqual(keyCombo.fromEvent(ev('Control', { ctrlKey: true })), null)
+})
+
+test('fromEvent output round-trips through parse and matches', () => {
+    for (let e of [ ev('m'), ev('M', { shiftKey: true }), ev('+', { shiftKey: true }), ev(' '), ev('ArrowLeft', { ctrlKey: true }), ev('=', { ctrlKey: true }), ev('F5') ]) {
+        let combo = keyCombo.fromEvent(e)
+        assert.ok(keyCombo.matches(keyCombo.parse(combo), e), combo)
+    }
+})
+
+test('formats combos for display', () => {
+    assert.strictEqual(keyCombo.format('ctrl+shift+c'), 'Ctrl+Shift+C')
+    assert.strictEqual(keyCombo.format('arrowup'), '↑')
+    assert.strictEqual(keyCombo.format('space'), 'Space')
+    assert.strictEqual(keyCombo.format('f5'), 'F5')
+    assert.strictEqual(keyCombo.format('+'), '+')
+    assert.strictEqual(keyCombo.format('nonsense+'), '')
+})

@@ -87,6 +87,26 @@
             "title": "Hide Shorts",
             "description": "Hides YouTube Shorts from the homepage"
         },
+        "shortcuts": {
+            "title": "Keyboard Shortcuts",
+            "description": "Choose the keys used while a video is playing. Select an action, then press the new key. Backspace unbinds it and Escape cancels. Arrow keys only act when no menu is open",
+            "press_key": "Press a key...",
+            "unbound": "Unbound",
+            "reset": "Reset to Defaults",
+            "actions": {
+                "volumeUp": "Volume Up",
+                "volumeDown": "Volume Down",
+                "mute": "Mute",
+                "speedUp": "Speed Up",
+                "speedDown": "Speed Down",
+                "speedReset": "Reset / Toggle Speed",
+                "toggleCaptions": "Toggle Captions",
+                "playPause": "Play / Pause",
+                "seekBackward": "Seek Backward",
+                "seekForward": "Seek Forward",
+                "toggleFullscreen": "Toggle Fullscreen"
+            }
+        },
         "guide_tabs": {
             "title": "Guide Tabs",
             "description": "Choose which sidebar guide tabs are shown. Turn a tab off to hide it. Relaunch after changing",

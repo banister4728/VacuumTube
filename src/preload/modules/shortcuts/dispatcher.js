@@ -3,20 +3,8 @@
 
 const keyCombo = require('./keyCombo')
 const configManager = require('../../config')
+const DEFAULT_KEYBINDS = require('./defaults')
 
-const DEFAULT_KEYBINDS = {
-    volumeUp: [ 'arrowup' ],
-    volumeDown: [ 'arrowdown' ],
-    mute: [ 'm' ],
-    speedUp: [ 'd' ],
-    speedDown: [ 'a' ],
-    speedReset: [ 's' ], //toggles between normal speed and the last non-normal speed
-    toggleCaptions: [ 'c' ],
-    playPause: [ 'space' ],
-    seekBackward: [ 'arrowleft' ],
-    seekForward: [ 'arrowright' ],
-    toggleFullscreen: [ 'f' ]
-}
 
 const actions = {}
 let listening = false;
@@ -47,6 +35,12 @@ function isPlayerIdle() {
     return focused.every((el) => el.matches('ytlr-shorts-page') || !!el.querySelector('video'))
 }
 
+//the settings overlay uses the same keys to navigate, and its listener may be registered after ours
+function isSettingsOverlayOpen() {
+    let overlay = document.getElementById('vt-settings-overlay-root')
+    return !!overlay && !overlay.classList.contains('vt-settings-hidden');
+}
+
 function getBindings() {
     let overrides = configManager.get().keybinds
     if (cache.bindings && cache.overrides === overrides) return cache.bindings; //config object is replaced on update, so identity check is enough
@@ -56,7 +50,7 @@ function getBindings() {
 }
 
 function onKeyDown(e) {
-    if (!e.key || !isWatching()) return;
+    if (!e.key || !isWatching() || isSettingsOverlayOpen()) return;
 
     let target = e.target
     if (target && (target.isContentEditable || /^(input|textarea|select)$/i.test(target.tagName))) return;

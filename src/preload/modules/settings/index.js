@@ -61,6 +61,7 @@ let tabs = [
     { id: 'userstyles' },
     { id: 'touch_overlay' },
     { id: 'controller_support' },
+    { id: 'shortcuts' },
     { id: 'device_discoverability' },
     { id: 'mac_permissions', hide: process.platform !== 'darwin' }
 ]
@@ -81,7 +82,8 @@ const panelModules = [
     require('./panels/h264ify'),
     require('./panels/mac-permissions'),
     require('./panels/userstyles'),
-    require('./panels/sponsorblock')
+    require('./panels/sponsorblock'),
+    require('./panels/shortcuts')
 ]
 
 const panels = {}
@@ -205,6 +207,7 @@ function updateFocus(area) {
                 panel.querySelector(`.vt-setting-item[data-index="${currentItemIndex}"]`)
                 || panel.querySelector(`.vt-userstyle-item[data-index="${currentItemIndex}"]`)
                 || panel.querySelector(`.vt-guide-tab-item[data-index="${currentItemIndex}"]`)
+                || panel.querySelector(`.vt-shortcut-item[data-index="${currentItemIndex}"]`)
                 || panel.querySelector(`.vt-button[data-index="${currentItemIndex}"]`)
 
             if (focusedElement) {
@@ -301,15 +304,23 @@ function getItemCount() {
     const settingItems = panel.querySelectorAll('.vt-setting-item').length;
     const userstyleItems = panel.querySelectorAll('.vt-userstyle-item').length;
     const guideTabItems = panel.querySelectorAll('.vt-guide-tab-item').length;
+    const shortcutItems = panel.querySelectorAll('.vt-shortcut-item').length;
     const buttons = panel.querySelectorAll('.vt-button').length;
 
-    return settingItems + userstyleItems + guideTabItems + buttons;
+    return settingItems + userstyleItems + guideTabItems + shortcutItems + buttons;
 }
 
 function handleKeyDown(e) {
     if (!overlayVisible) return;
 
     const key = e.key;
+
+    //a panel waiting for a key press (like rebinding a shortcut) gets every key before navigation does
+    const activePanel = getActivePanel()
+    if (activePanel?.isCapturing?.()) {
+        activePanel.onCaptureKey(e)
+        return;
+    }
 
     //handle escape/back
     if (key === 'Escape' || key === 'Backspace') {
@@ -483,6 +494,12 @@ function setupEventListeners() {
         const guideTabItem = e.target.closest('.vt-guide-tab-item')
         if (guideTabItem) {
             getActivePanel()?.onActivate?.(guideTabItem)
+            return;
+        }
+
+        const shortcutItem = e.target.closest('.vt-shortcut-item')
+        if (shortcutItem) {
+            getActivePanel()?.onActivate?.(shortcutItem)
             return;
         }
 
