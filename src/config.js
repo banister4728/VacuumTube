@@ -47,7 +47,7 @@ const defaults = {
     touch_overlay: true, //whether or not to enable the touch overlay interface when touch is detected
     controller_support: true, //whether or not to enable game controller support
     device_discoverability: true, //whether or not to enable DIAL support
-    keybinds: {} //overrides for playback shortcuts, action -> key or array of keys ("ctrl+shift+c" style), "" to unbind. actions: volumeUp, volumeDown, mute, speedUp, speedDown, speedReset, toggleCaptions, playPause, seekBackward, seekForward
+    keybinds: {} //overrides for playback shortcuts, action -> key or array of keys ("ctrl+shift+c" style), "" to unbind. actions: volumeUp, volumeDown, mute, speedUp, speedDown, speedReset, toggleCaptions, playPause, seekBackward, seekForward, toggleFullscreen
 }
 
 function init(overrides = {}) {

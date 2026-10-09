@@ -5,16 +5,17 @@ const keyCombo = require('./keyCombo')
 const configManager = require('../../config')
 
 const DEFAULT_KEYBINDS = {
-    volumeUp: [ '+', '=' ],
-    volumeDown: [ '-' ],
+    volumeUp: [ 'arrowup' ],
+    volumeDown: [ 'arrowdown' ],
     mute: [ 'm' ],
     speedUp: [ 'd' ],
     speedDown: [ 'a' ],
     speedReset: [ 's' ], //toggles between normal speed and the last non-normal speed
     toggleCaptions: [ 'c' ],
-    playPause: [ 'k' ],
-    seekBackward: [ 'j' ],
-    seekForward: [ 'l' ]
+    playPause: [ 'space' ],
+    seekBackward: [ 'arrowleft' ],
+    seekForward: [ 'arrowright' ],
+    toggleFullscreen: [ 'f' ]
 }
 
 const actions = {}

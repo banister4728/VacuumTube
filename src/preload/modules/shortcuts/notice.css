@@ -1,0 +1,21 @@
+#vt-shortcut-notice {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 1.5rem;
+    z-index: 999999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+    font-size: 18px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+#vt-shortcut-notice.visible {
+    opacity: 1;
+}

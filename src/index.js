@@ -264,6 +264,13 @@ async function main() {
         }
     })
 
+    electron.ipcMain.handle('toggle-fullscreen', () => {
+        if (!win) return false;
+
+        win.setFullScreen(!win.isFullScreen())
+        return win.isFullScreen();
+    })
+
     electron.ipcMain.handle('set-on-top', (e, value) => {
         if (win) {
             win.setAlwaysOnTop(value)

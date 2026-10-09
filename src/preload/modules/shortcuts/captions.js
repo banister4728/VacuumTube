@@ -1,5 +1,6 @@
 const rcMod = require('../../util/resolveCommandModifiers')
 const shortcuts = require('./dispatcher')
+const notice = require('./notice')
 
 module.exports = () => {
     let captions = false;
@@ -20,6 +21,7 @@ module.exports = () => {
 
     function toggleCaptions() { //doesn't actually change boolean value of captions variable because that's handled by the rcMod code above, which will hear these commands (as well as manual ones from toggling the button or changing track)
         if (captions) {
+            notice.show('captions_off')
             rcMod.resolveCommand({
                 commandMetadata: {
                     webCommandMetadata: {
@@ -29,6 +31,7 @@ module.exports = () => {
                 selectSubtitlesTrackCommand: {} //off
             })
         } else {
+            notice.show('captions_on')
             rcMod.resolveCommand({
                 commandMetadata: {
                     webCommandMetadata: {

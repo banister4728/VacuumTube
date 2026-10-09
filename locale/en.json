@@ -1,5 +1,13 @@
 {
     "general": {
+        "shortcuts": {
+            "playing": "Playing",
+            "paused": "Paused",
+            "captions_on": "Captions on",
+            "captions_off": "Captions off",
+            "fullscreen": "Fullscreen",
+            "windowed": "Windowed"
+        },
         "video_copied": "Video link copied to clipboard",
         "dislikes": "Dislikes",
         "steam_controller_notice": "External controller isn't detected? Try the steamdeck-input-disabler plugin from Decky.",

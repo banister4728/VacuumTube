@@ -5,8 +5,10 @@ const captions = require('./captions')
 const playback = require('./playback')
 const volume = require('./volume')
 const speed = require('./speed')
+const notice = require('./notice')
 
 module.exports = async () => {
+    notice.init()
     captions()
     playback()
 
