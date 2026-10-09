@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false #one platform failing shouldn't cancel the others
       matrix:
         include:
           - os: windows-latest
@@ -40,7 +41,7 @@ jobs:
         run: npm ci
 
       - name: Build ${{ matrix.platform }} app
-        run: npm run ${{ matrix.build_script }}
+        run: npm run ${{ matrix.build_script }} -- --publish never #the upload steps below attach the files, and package.json's publish config points at the upstream repo
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
 
