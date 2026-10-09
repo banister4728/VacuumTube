@@ -14,7 +14,7 @@ async function init() {
 
     css.inject('shortcut-notice', fs.readFileSync(path.join(__dirname, 'notice.css'), 'utf-8'))
 
-    element = functions.el('div', { id: 'vt-shortcut-notice' })
+    element = functions.el('div', { id: 'vt-shortcut-popup' })
     document.body.appendChild(element)
 }
 

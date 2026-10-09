@@ -1,4 +1,4 @@
-#vt-shortcut-notice {
+#vt-shortcut-popup {
     position: fixed;
     bottom: 80px;
     left: 50%;
@@ -16,6 +16,6 @@
     white-space: nowrap;
 }
 
-#vt-shortcut-notice.visible {
+#vt-shortcut-popup.visible {
     opacity: 1;
 }
