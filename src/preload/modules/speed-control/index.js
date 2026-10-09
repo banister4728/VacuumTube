@@ -3,9 +3,12 @@ const path = require('path')
 const rcMod = require('../../util/resolveCommandModifiers')
 const css = require('../../util/css')
 const functions = require('../../util/functions')
+const shortcuts = require('../../util/shortcuts')
 const configManager = require('../../config')
 
 const config = configManager.get()
+
+const SPEED_STEP = 0.25
 
 module.exports = async () => {
     const el = functions.el;
@@ -69,42 +72,7 @@ module.exports = async () => {
         }
     }
 
-    function isWatching() {
-        let isShort = !!document.querySelector('ytlr-shorts-page')?.classList?.contains('zylon-focus')
-        if (isShort) { //very dumb, don't like it, but there doesn't seem to be a better way
-            return true;
-        } else {
-            let baseUri = window.yt?.player?.utils?.videoElement_?.baseURI;
-            if (!baseUri || !baseUri.includes('/watch?v=')) return false;
-
-            let id = baseUri.split('/watch?v=')[1]?.slice(0, 11)
-            if (!id) return false;
-
-            return true;
-        }
-    }
-
-    //speed controls
-    document.addEventListener('keydown', (e) => {
-        const key = e.key || e.keyCode; 
-        if (!key || !isWatching())
-            return;
-
-        const speedStep = 0.25;
-
-        if (key === 's' || key === 'S') {
-            setPlaybackRate(0) // toggle
-        } else if (key === 'a' || key === 'A') {
-            setPlaybackRate(-speedStep)
-        } else if (key === 'd' || key === 'D') {
-            setPlaybackRate(speedStep)
-        } else {
-            return;
-        }
-
-        e.preventDefault()
-        e.stopPropagation()
-        e.stopImmediatePropagation()
-        showSpeedIndicator()
-    }, true)
+    shortcuts.register('speedReset', () => { setPlaybackRate(0); showSpeedIndicator() }) // toggle
+    shortcuts.register('speedDown', () => { setPlaybackRate(-SPEED_STEP); showSpeedIndicator() })
+    shortcuts.register('speedUp', () => { setPlaybackRate(SPEED_STEP); showSpeedIndicator() })
 }

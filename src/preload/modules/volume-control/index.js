@@ -3,9 +3,12 @@ const path = require('path')
 const rcMod = require('../../util/resolveCommandModifiers')
 const css = require('../../util/css')
 const functions = require('../../util/functions')
+const shortcuts = require('../../util/shortcuts')
 const configManager = require('../../config')
 
 const config = configManager.get()
+
+const VOLUME_STEP = 5
 
 module.exports = async () => {
     const el = functions.el;
@@ -80,35 +83,32 @@ module.exports = async () => {
         }
     }
 
-    function isWatching() {
-        let isShort = !!document.querySelector('ytlr-shorts-page')?.classList?.contains('zylon-focus')
-        if (isShort) { //very dumb, don't like it, but there doesn't seem to be a better way
-            return true;
-        } else {
-            let baseUri = window.yt?.player?.utils?.videoElement_?.baseURI;
-            if (!baseUri || !baseUri.includes('/watch?v=')) return false;
-
-            let id = baseUri.split('/watch?v=')[1]?.slice(0, 11)
-            if (!id) return false;
-
-            return true;
-        }
+    function changeVolume(delta) {
+        volume = Math.max(0, Math.min(100, volume + delta))
+        showVolumeIndicator()
+        setVolume()
     }
 
-    //volume controls
+    function toggleMute() {
+        muted = !muted;
+        showVolumeIndicator()
+        setVolume()
+    }
+
+    shortcuts.register('volumeUp', () => changeVolume(VOLUME_STEP))
+    shortcuts.register('volumeDown', () => changeVolume(-VOLUME_STEP))
+    shortcuts.register('mute', toggleMute)
+
+    //custom VacuumTube keycodes sent by controller-support.js, these aren't rebindable
     document.addEventListener('keydown', (e) => {
-        const key = e.key || e.keyCode; 
-        if (!key || !isWatching()) return;
+        if (e.key || !shortcuts.isWatching()) return;
 
-        const volumeStep = 5;
-
-        //the 16xxx ones are custom VacuumTube keycodes used by controller-support.js
-        if (key === '+' || key === '=' || key === 187 || key === 16002) {
-            volume = Math.min(100, volume + volumeStep)
-        } else if (key === '-' || key === 189 || key === 16001) {
-            volume = Math.max(0, volume - volumeStep)
-        } else if (key === 'm' || key === 'M' || key === 77 || key === 16000) {
-            muted = !muted;
+        if (e.keyCode === 16002) {
+            changeVolume(VOLUME_STEP)
+        } else if (e.keyCode === 16001) {
+            changeVolume(-VOLUME_STEP)
+        } else if (e.keyCode === 16000) {
+            toggleMute()
         } else {
             return;
         }
@@ -116,8 +116,6 @@ module.exports = async () => {
         e.preventDefault()
         e.stopPropagation()
         e.stopImmediatePropagation()
-        showVolumeIndicator()
-        setVolume()
     }, true)
 
     //cast allows you to control the volume, but it uses a different (VERY OLD LOOKING) ui, so we hook it up to our new one instead

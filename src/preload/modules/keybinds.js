@@ -4,7 +4,10 @@ const ui = require('../util/ui')
 const rcMod = require('../util/resolveCommandModifiers')
 const patchFunction = require('../util/patchFunction')
 const localeProvider = require('../util/localeProvider')
+const shortcuts = require('../util/shortcuts')
 const { clipboard } = require('electron')
+
+const SEEK_SECONDS = 10
 
 module.exports = async () => {
     await localeProvider.waitUntilAvailable()
@@ -113,12 +116,26 @@ module.exports = async () => {
         }
     }
 
-    document.addEventListener('keydown', (e) => {
-        if (!document.body.classList.contains('WEB_PAGE_TYPE_WATCH') && !document.body.classList.contains('WEB_PAGE_TYPE_SHORTS')) return;
-        if (!e.ctrlKey && !e.shiftKey && !e.metaKey && e.key?.toLowerCase() === 'c') {
-            e.stopImmediatePropagation()
-            e.stopPropagation()
-            toggleCaptions()
+    shortcuts.register('toggleCaptions', toggleCaptions)
+
+    shortcuts.register('playPause', () => {
+        let video = document.querySelector('video')
+        if (!video) return;
+
+        if (video.paused) {
+            video.play()
+        } else {
+            video.pause()
         }
-    }, true)
+    })
+
+    function seekBy(seconds) {
+        let video = document.querySelector('video')
+        if (!video || !isFinite(video.duration)) return;
+
+        video.currentTime = Math.max(0, Math.min(video.duration, video.currentTime + seconds))
+    }
+
+    shortcuts.register('seekBackward', () => seekBy(-SEEK_SECONDS))
+    shortcuts.register('seekForward', () => seekBy(SEEK_SECONDS))
 }
