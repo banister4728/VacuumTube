@@ -3,7 +3,7 @@ const path = require('path')
 const rcMod = require('../../util/resolveCommandModifiers')
 const css = require('../../util/css')
 const functions = require('../../util/functions')
-const shortcuts = require('../../util/shortcuts')
+const shortcuts = require('./dispatcher')
 const configManager = require('../../config')
 
 const config = configManager.get()
@@ -15,7 +15,7 @@ module.exports = async () => {
 
     await functions.waitForCondition(() => !!document.body)
 
-    const cssPath = path.join(__dirname, 'style.css')
+    const cssPath = path.join(__dirname, 'volume.css')
     const text = fs.readFileSync(cssPath, 'utf-8')
 
     css.inject('volume-control', text)

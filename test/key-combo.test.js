@@ -1,6 +1,6 @@
 const test = require('node:test')
 const assert = require('node:assert')
-const keyCombo = require('../src/preload/util/keyCombo')
+const keyCombo = require('../src/preload/modules/shortcuts/keyCombo')
 
 const ev = (key, mods = {}) => ({ key, ctrlKey: false, altKey: false, shiftKey: false, metaKey: false, ...mods })
 

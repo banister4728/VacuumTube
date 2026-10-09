@@ -4,10 +4,7 @@ const ui = require('../util/ui')
 const rcMod = require('../util/resolveCommandModifiers')
 const patchFunction = require('../util/patchFunction')
 const localeProvider = require('../util/localeProvider')
-const shortcuts = require('../util/shortcuts')
 const { clipboard } = require('electron')
-
-const SEEK_SECONDS = 10
 
 module.exports = async () => {
     await localeProvider.waitUntilAvailable()
@@ -76,66 +73,4 @@ module.exports = async () => {
             ui.toast('VacuumTube', locale.general.video_copied)
         }
     }, true)
-
-    //c to toggle captions (like desktop)
-    let captions = false;
-    let captionSettings = { useDefaultTrack: true }
-
-    rcMod.addInputModifier((c) => {
-        if (c.selectSubtitlesTrackCommand) {
-            if (Object.keys(c.selectSubtitlesTrackCommand).length === 0) {
-                captions = false;
-            } else {
-                captions = true;
-                captionSettings = c.selectSubtitlesTrackCommand;
-            }
-        }
-
-        return c;
-    })
-
-    function toggleCaptions() { //doesn't actually change boolean value of captions variable because that's handled by the rcMod code above, which will hear these commands (as well as manual ones from toggling the button or changing track)
-        if (captions) {
-            rcMod.resolveCommand({
-                commandMetadata: {
-                    webCommandMetadata: {
-                        clientAction: true
-                    }
-                },
-                selectSubtitlesTrackCommand: {} //off
-            })
-        } else {
-            rcMod.resolveCommand({
-                commandMetadata: {
-                    webCommandMetadata: {
-                        clientAction: true
-                    }
-                },
-                selectSubtitlesTrackCommand: captionSettings //last known caption settings or the default
-            })
-        }
-    }
-
-    shortcuts.register('toggleCaptions', toggleCaptions)
-
-    shortcuts.register('playPause', () => {
-        let video = document.querySelector('video')
-        if (!video) return;
-
-        if (video.paused) {
-            video.play()
-        } else {
-            video.pause()
-        }
-    })
-
-    function seekBy(seconds) {
-        let video = document.querySelector('video')
-        if (!video || !isFinite(video.duration)) return;
-
-        video.currentTime = Math.max(0, Math.min(video.duration, video.currentTime + seconds))
-    }
-
-    shortcuts.register('seekBackward', () => seekBy(-SEEK_SECONDS))
-    shortcuts.register('seekForward', () => seekBy(SEEK_SECONDS))
 }

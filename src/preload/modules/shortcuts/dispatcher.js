@@ -1,8 +1,8 @@
-//configurable keyboard shortcuts for when a video is playing
-//modules register named actions here, and users can rebind them with the "keybinds" object in config.json
+//dispatches keyboard shortcuts while a video is playing to named actions registered by the other files in this module
+//users can rebind them with the "keybinds" object in config.json
 
 const keyCombo = require('./keyCombo')
-const configManager = require('../config')
+const configManager = require('../../config')
 
 const DEFAULT_KEYBINDS = {
     volumeUp: [ '+', '=' ],
